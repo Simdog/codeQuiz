@@ -9,33 +9,36 @@
 <body>
     <nav class="navbar navbar-light bg-light">
         <a id="highscore" class="navbar-brand" href="#">Highscore</a>
-        <span class="navbar-brand mb-0 h1">Time Tracker</span>
+        <span class="navbar-brand mb-0 h1">Time: <span id="timer"> </span></span>
       </nav>
 
       <div class="container">
         <div class="row">
           <div class="col">
-              <h1 style="text-align: center;"> Coding Quiz Challenge</h1>
+              <h1 id="questions"> I will ask the Series of questions here</h1>
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            Welcome to the Coding Quiz challenge. We will ask you a series of questions and you are given a time limit to answer as many questions as you can. <br>
-            If you answer a question incorrectly time will be deducted from total time. Answer as many questions correctly as you can before the time runs out! <br>
-            Good luck!
-            <br>
-            <a href="#"><button  id="startQuiz" >Start Quiz</button></a>
-            
+          <div id="answer1" class="col">
+              Answer 1
           </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div id="answer2" class="col">
+                Answer 2
             </div>
           </div>
           <div class="row">
-            <div class="col">
+            <div id="answer3" class="col">
+                Answer 3 
             </div>
           </div>
+          <div class="row">
+            <div id="answer4" class="col">
+                Answer 4 
+            </div>
+          </div>
+          <a id="restart" href="index.html"> <button >Restart</button></a>
       </div>
       <script src="script.js"></script>
 </body>
