@@ -2,7 +2,7 @@ var startQuiz = document.querySelector("#startQuiz");
 var timer = document.querySelector("#timer");
 var restart = document.querySelector("#restart");
 var questions = document.querySelector("questions.html")
-var timeLeft = 75;
+var timeLeft = 60;
 
 console.log("timer");
 console.log(timeLeft)
@@ -21,23 +21,10 @@ function startTimer() {
      timeLeft--;
     
      if (timeLeft <= 0) {
-        clearInterval(startTimer);
+        clearInterval(start);
+        window.location.replace("highscores.html")
 }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -48,3 +35,17 @@ function startTimer() {
 
 
 startQuiz.addEventListener("click", quizStart);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
