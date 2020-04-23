@@ -10,10 +10,10 @@
     <nav class="navbar navbar-light bg-light">
         <a id="highscore" class="navbar-brand" href="#">Highscore</a>
         <!-- <span class="navbar-brand mb-0 h1">Time Tracker</span> -->
-        <span class="navbar-brand mb-0 h1">Time: <span id="time"></span>
+        <span class="navbar-brand mb-0 h1">Time: <span id="timer">0:0</span>
       </nav>
 
-      <div class="container">
+      <div class="container" id="hide">
         <div class="row">
           <div class="col">
               <h1 style="text-align: center;"> Coding Quiz Challenge</h1>
@@ -25,10 +25,28 @@
             If you answer a question incorrectly time will be deducted from total time. Answer as many questions correctly as you can before the time runs out! <br>
             Good luck!
             <br>
-            <button  id="startQuiz" >Start Quiz</button>
-            
+            <button  id="startQuiz" >Start Quiz</button>  
           </div>
+        </div>  
+      </div>
+
+      <div class="container hide" >
+      <div class="btn-group-vertical" class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-5 " id="questions">Questions</h1>
+        <p class="lead">___________________________________________________________________________</p>
         </div>
+        <button id="btn1" type="button" class="btn btn-primary btn-lg hide">Answer 1</button>
+        <br>
+        <button id="btn2" type="button" class="btn btn-primary btn-lg hide">Answer 2</button>
+        <br>
+        <button id="btn3" type="button" class="btn btn-primary btn-lg hide">Answer 3</button>
+        <br>
+        <button id="btn4" type="button" class="btn btn-primary btn-lg hide">Answer 4</button>
+        <br>
+      </div>
+      
+
       </div>
       <script src="newjs.js"></script>
 </body>
