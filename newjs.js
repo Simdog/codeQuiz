@@ -2,40 +2,44 @@
 var start = document.getElementById("startQuiz");
 var t = document.getElementById("timer");
 var timeLeft = "";
-var score = 0;
+var score;
+var time;
+var stopTimer;
 var hidden = document.querySelector(".hide");
 hidden.style.display = "none";
 var currentQuestion;
 var askQuestion = document.getElementById("questions");
 var getAnswer = document.getElementById("answers");
-var ansBtn = document.querySelector(".btn");
+var hsHide = document.getElementById("hidethis");
+hsHide.style.display = "none";
+var hsContainer = document.getElementById("highscore-container");
+hsContainer.style.display = "none";
+var scoreList = document.getElementById("score-list");
+var homeButton = document.getElementById("home-btn");
+var clearBtn = document.getElementById("clear");
+var submit = document.getElementById("submit");
 
 
 function setNextQuestion() {
 
     clearQuestion();
 
-
-    // console.log(questions[0]);
-    // ansBtn.innerHTML = questions[0].answers.text;
     askQuestion.innerHTML = questions[currentQuestion].question;
-    console.log(questions[currentQuestion].question);
+    //console.log(questions[currentQuestion].question);
 
     for (var i = 0; i < questions[currentQuestion].answers.length; i++) {
-        var simdog = document.createElement("button");
-        simdog.innerHTML = questions[currentQuestion].answers[i].text;
-        console.log(questions[currentQuestion].answers[i].text);
-        simdog.addEventListener("click", runThis);
+        var ansBtn = document.createElement("button");
+        ansBtn.innerHTML = questions[currentQuestion].answers[i].text;
+        //console.log(questions[currentQuestion].answers[i].text);
 
         if (questions[currentQuestion].answers[i].correct) {
 
-            simdog.dataset.correct = questions[currentQuestion].answers[i].correct;
+            ansBtn.dataset.correct = questions[currentQuestion].answers[i].correct;
         }
-        simdog.addEventListener("click", checkAnswer);
+        ansBtn.addEventListener("click", checkAnswer);
+        ansBtn.addEventListener("click", whenAnswerButtonClick);
 
-
-        getAnswer.append(simdog);
-
+        getAnswer.append(ansBtn);
 
     }
 
@@ -43,36 +47,33 @@ function setNextQuestion() {
 
 }
 
-function checkAnswer (choice){
-    var c = choice.target.dataset.correct 
+function checkAnswer(choice) {
+    var c = choice.target.dataset.correct
     if (c) {
-      console.log("You got the correct answer");
+        console.log("You got the correct answer");
+        score += 1;
+        console.log(score);
     } else {
         timeLeft -= 5;
     }
 
-    
+
 
 }
 
 function clearQuestion() {
 
-    // var children = getAnswer.children;
-    // for (var i = 0; i < children.length; i++) {
-    //     console.log(children[i]);
-    //     getAnswer.removeChild(children[i]);
-    // }
-    
     while (getAnswer.firstChild) {
         getAnswer.removeChild(getAnswer.firstChild);
     }
 }
 
-function runThis() {
+function whenAnswerButtonClick() {
     currentQuestion++;
     if (timeLeft <= 0 || currentQuestion >= questions.length) {
         console.log("gtfo youre done");
-
+        clearInterval(stopTimer);
+        displayHs();
     } else {
         setNextQuestion();
 
@@ -82,7 +83,8 @@ function runThis() {
 
 function startQ() {
     // hide the intorduction 
-    timeLeft = 20;
+    timeLeft = 60;
+    score = 0;
     var hide = document.getElementById("hide");
     if (hide.style.display === "none") {
         hide.style.display = "block";
@@ -90,32 +92,24 @@ function startQ() {
     } else {
         hide.style.display = "none";
         hidden.style.display = "block";
-        startTimer();
-        var time = setInterval(startTimer, 1000);
+        stopTimer = setInterval(startTimer, 1000);
+        //time = setInterval(startTimer, 1000);
     }
-    //first redirect to questions page
-    //  window.location.assign("questions.html");
-    //then start the timer
     currentQuestion = 0;
     setNextQuestion();
 
 }
 
 
+//var stopTimer = startTimer();
 
-// function pageRedirect() {
-
-// }
 
 function startTimer() {
 
-
-
     if (timeLeft < 0) {
-        clearInterval(startTimer);
-        timeLeft = ("0");
-
-
+        clearInterval(stopTimer);
+        displayHs();
+        timeLeft = "0";
 
     } else {
         t.innerHTML = timeLeft;
@@ -123,89 +117,120 @@ function startTimer() {
     }
 }
 
-var questionList = [["what is sim's favorite color?", [[1, false], ["red", true], ["black", false], [3, false]]], ["what is sim's favorite number?", [1, "pink", "yellow", 4]], []]
+function displayHs() {
 
+    var final = document.getElementById("finalscore");
+    var inputHs = document.getElementById("input-hs");
+    final.innerHTML = score;
+    hidden.style.display = "none";
+    hsHide.style.display = "block";
 
+    submit.addEventListener("click", () => {
+        var y = inputHs.value;
+        saveScore(y, score);
+        console.log(y);
+        showHighscore();
 
-var listOfcats = [
-    {
-        color: "Red",
-        age: 10,
-        children: [
-            { name: "caturcus", age: 1 },
-            { name: "fang", age: 1.3 },
+    })
+}
 
+function showHighscore() {
 
-
-
-        ]
-
-    },
-    {
-        color: "Black",
-        age: 4,
-
-    },
-    {
-        color: "Grey",
-        age: 2
+    for (let index = 0; index < scoreList.childElementCount; index++) {
+        scoreList.removeChild(scoreList.firstChild);
     }
-]
-console.log(listOfcats[0].children[1].age);
-console.log(listOfcats[2].color);
+
+    console.log("submit was called");
+    hsContainer.style.display = "block";
+    hsHide.style.display = "none";
+    clearBtn.addEventListener("click", clearHs);
+    homeButton.addEventListener('click', resetScreen);
+
+    for (var i = 0; i < localStorage.length; i++) {
+        var divChild = document.createElement('div');
+        var childName = localStorage.key(i);
+        var childScore = localStorage.getItem(localStorage.key(i));
+
+        divChild.innerHTML = "Name of Player:   " + childName + "       Score  " + childScore;
+
+        scoreList.appendChild(divChild);
+    }
+
+
+}
+
+function resetScreen() {
+    for (let index = 0; index < scoreList.childElementCount; index++) {
+        scoreList.removeChild(scoreList.firstChild);
+    }
+    //hide the highscore container
+    document.getElementById("highscore-container").style.display = "none";
+
+    //bering up the inro container 
+    document.getElementById("hide").style.display = "block";
+}
+
+function saveScore(y, x) {
+    console.log("This is your score " + y + ".       " + x);
+    localStorage.setItem(y, x);
+}
+
+function clearHs() {
+    localStorage.clear();
+
+}
 
 var questions = [
     {
-        question: "What is 2 + 2?",
+        question: "What does HTML stand for?",
 
         answers: [
-            { text: "4", correct: true },
-            { text: "69", correct: false },
-            { text: "22", correct: false },
-            { text: "2", correct: false }
+            { text: "Help Telegram Master Lost", correct: false },
+            { text: "HyperText Markup Language", correct: true },
+            { text: "HyperType Makeup Language", correct: false },
+            { text: "Hey There Meddling Lion", correct: false }
         ]
     },
     {
-        question: "What is 2 + 100?",
+        question: "What does CSS stand for?",
         answers: [
-            { text: "102", correct: true },
-            { text: "69", correct: false },
-            { text: "22", correct: false },
-            { text: "2", correct: false }
+            { text: "Cascading Style Sheet", correct: true },
+            { text: "Constructing Styling & Spacing", correct: false },
+            { text: "Cross Section Style", correct: false },
+            { text: "Creating Style Sheet", correct: false }
         ]
     },
     {
-        question: "What is 9 * 7?",
+        question: "Car is to Carpet, like Java is to ___________?",
 
         answers: [
-            { text: "36", correct: false },
-            { text: "70", correct: false },
-            { text: "63", correct: true },
-            { text: "2", correct: false }
+            { text: "Javelin", correct: false },
+            { text: "Coffee", correct: false },
+            { text: "Javascript", correct: true },
+            { text: "jQuery", correct: false }
+        ]
+    },
+    {
+        question: "What is Bootstrap?",
+
+        answers: [
+            { text: "A strap for your boots to stay secure.", correct: false },
+            { text: "A javascript library function.", correct: false },
+            { text: "A HTML and CSS based design templates.", correct: true },
+            { text: "A shortcut for Javascript.", correct: false }
+        ]
+    },
+    {
+        question: "How do you define something in Javascript?",
+
+        answers: [
+            { text: "Var", correct: true },
+            { text: "For", correct: false },
+            { text: "If", correct: false },
+            { text: "Define", correct: false }
         ]
     }
 ]
-// for (var i = 0;i < questions.length;i++){
-// console.log(questions[i].question)
-// for (let index = 0; index < questions[i].answers.length; index++) {
-//     console.log(questions[i].answers[index].text);
 
-// }
-// }
-
-// console.log(questionList[0][1][0][1]);
-
-// console.log(questions[0].answers[0].jamal);
-// console.log(questions[2].answers[2].text);
-
-
-// const car = {
-//     color: "red",
-//     type: "BMW",
-
-//     showcolor: () => {
-//         return console.log(this.color);
-//     }
-// }
 
 start.addEventListener("click", startQ);
